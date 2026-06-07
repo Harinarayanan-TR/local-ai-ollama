@@ -1,0 +1,24 @@
+Local WiFi AI Server - Final Report
+
+Implemented:
+- LAN gateway at http://<host-ip>:6767.
+- Minimal login page with API-key authentication.
+- Device-based IDs stored by browser and persisted server-side.
+- Personalized chat dashboard at /chat/<device-id>.
+- Per-session chat history in SQLite.
+- Conservative model router with Phi-3 as default.
+- Model IDs: M01 phi3, M02 deepseek-coder, M03 mistral, M04 llama3, M05 llava.
+- Single-generation lock to prevent host overload.
+- Model unloading before switching through Ollama keep_alive: 0.
+- Required blocked-load response when runtime is busy.
+- Updated Docker Compose, nginx gateway, start scripts, and documentation.
+
+Archived:
+- Previous release files were moved to pre-release/.
+
+Run:
+- ./start.sh
+- Open http://<host-ip>:6767
+
+Default login key:
+- thoovara@hari

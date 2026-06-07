@@ -1,0 +1,171 @@
+📦 Local AI Chat Platform
+├── 📄 README.md                          # Main documentation (4.6 KB)
+├── 📄 QUICK_START.md                     # 5-minute setup guide (4.5 KB)
+├── 📄 PROJECT_SUMMARY.md                 # Architecture overview (14.1 KB)
+├── 📄 API_REFERENCE.md                   # Complete API documentation (10.5 KB)
+├── 📄 MANIFEST.md                        # Project manifest & deliverables
+├── 📄 FILE_TREE.txt                      # This file
+├── 📄 docker-compose.yml                 # Multi-container orchestration
+├── 📄 .gitignore                         # Git exclusions
+├── 🚀 start.sh                           # Linux/macOS startup script
+├── 🚀 start.bat                          # Windows startup script
+│
+├── 📂 backend/                           (Python FastAPI Application)
+│   ├── 📄 Dockerfile                     # Docker image config
+│   ├── 📄 requirements.txt                # Python dependencies (7 packages)
+│   ├── 📄 .env.example                   # Environment template
+│   ├── 📄 README.md                      # Backend documentation (6.2 KB)
+│   │
+│   └── 📂 app/                           (FastAPI Application)
+│       ├── 📄 main.py                    # FastAPI entry point (1.9 KB)
+│       ├── 📄 __init__.py
+│       │
+│       ├── 📂 database/                  (Database Configuration)
+│       │   ├── 📄 config.py              # SQLAlchemy setup (0.6 KB)
+│       │   ├── 📄 __init__.py
+│       │   └── 📂 data/                  # SQLite database (auto-created)
+│       │       └── chat.db               # SQLite database file
+│       │
+│       ├── 📂 models/                    (Database Models)
+│       │   ├── 📄 database.py            # SQLAlchemy models (1.5 KB)
+│       │   │   ├── User table
+│       │   │   ├── ChatMessage table
+│       │   │   ├── Session table
+│       │   │   └── APILog table
+│       │   └── 📄 __init__.py
+│       │
+│       ├── 📂 routers/                   (API Endpoints)
+│       │   ├── 📄 auth.py                # Authentication (1.1 KB)
+│       │   │   └── POST /api/auth/login
+│       │   ├── 📄 chat.py                # Chat operations (3.9 KB)
+│       │   │   ├── POST /api/chat/send
+│       │   │   ├── GET /api/chat/status
+│       │   │   ├── POST /api/chat/switch-model
+│       │   │   └── GET /api/chat/history/{session_id}
+│       │   └── 📄 __init__.py
+│       │
+│       ├── 📂 schemas/                   (Pydantic Models)
+│       │   ├── 📄 requests.py            # Request/response schemas (0.7 KB)
+│       │   │   ├── LoginRequest/Response
+│       │   │   ├── ChatRequest/Response
+│       │   │   ├── ModelStatus
+│       │   │   ├── ModelSwitchRequest
+│       │   │   └── HistoryResponse
+│       │   └── 📄 __init__.py
+│       │
+│       └── 📂 utils/                     (Business Logic)
+│           ├── 📄 ollama_manager.py      # Ollama API integration (4.2 KB)
+│           │   ├── OllamaManager class
+│           │   ├── Model validation
+│           │   ├── Model switching logic
+│           │   └── Response generation
+│           ├── 📄 router.py              # Smart routing (2.4 KB)
+│           │   └── ModelRouter class
+│           │       ├── Coding detection
+│           │       ├── Reasoning detection
+│           │       ├── Fast query detection
+│           │       └── Model classification
+│           ├── 📄 managers.py            # Business logic managers (3.0 KB)
+│           │   ├── AuthManager
+│           │   ├── MessageManager
+│           │   └── LogManager
+│           └── 📄 __init__.py
+│
+├── 📂 frontend/                          (React Application)
+│   ├── 📄 Dockerfile                     # Docker image config
+│   ├── 📄 package.json                   # npm dependencies (8 packages)
+│   ├── 📄 README.md                      # Frontend documentation (7.8 KB)
+│   │
+│   ├── 📂 public/                        (Static Assets)
+│   │   └── 📄 index.html                 # HTML entry point (0.3 KB)
+│   │
+│   └── 📂 src/                           (React Source Code)
+│       ├── 📄 App.js                     # Root component (0.6 KB)
+│       ├── 📄 index.js                   # React entry point (0.3 KB)
+│       ├── 📄 index.css                  # Global styles (0.6 KB)
+│       │
+│       ├── 📂 pages/                     (Page Components)
+│       │   ├── 📄 LoginPage.js           # Login interface (1.8 KB)
+│       │   │   ├── API key input
+│       │   │   ├── Error handling
+│       │   │   └── Loading state
+│       │   └── 📄 ChatPage.js            # Chat interface (4.5 KB)
+│       │       ├── Message history
+│       │       ├── Real-time chat
+│       │       ├── Model switching
+│       │       └── Auto mode toggle
+│       │
+│       ├── 📂 components/                (Reusable Components)
+│       │   ├── 📄 ChatMessage.js         # Message bubble (0.9 KB)
+│       │   │   ├── User messages (blue)
+│       │   │   ├── AI messages (dark)
+│       │   │   ├── Model indicator
+│       │   │   └── Timestamps
+│       │   └── 📄 Sidebar.js             # Model selector (2.2 KB)
+│       │       ├── Collapsible menu
+│       │       ├── Model buttons
+│       │       ├── Auto mode toggle
+│       │       ├── Status display
+│       │       └── Logout button
+│       │
+│       ├── 📂 styles/                    (Component Styles)
+│       │   ├── 📄 App.css                # App container
+│       │   ├── 📄 Login.css              # Login page (2.4 KB)
+│       │   │   └── Glassmorphism design
+│       │   ├── 📄 ChatPage.css           # Chat layout (2.9 KB)
+│       │   │   └── Dark theme
+│       │   ├── 📄 ChatMessage.css        # Message bubbles (1.4 KB)
+│       │   │   └── Animations
+│       │   └── 📄 Sidebar.css            # Sidebar menu (3.4 KB)
+│       │       └── Responsive design
+│       │
+│       └── 📂 utils/                     (Utility Functions)
+│           └── 📄 api.js                 # Axios API client (1.5 KB)
+│               ├── login()
+│               ├── sendMessage()
+│               ├── getStatus()
+│               ├── switchModel()
+│               └── getHistory()
+
+═══════════════════════════════════════════════════════════════════
+
+📊 PROJECT STATISTICS
+
+Total Files: 45
+Total Lines of Code: 1,500+
+Total Documentation: 6 files
+Total Directories: 16
+
+Backend Files: 11 Python files
+Frontend Files: 9 JavaScript files
+Styles: 5 CSS files
+Config: 8 configuration files
+Docs: 6 documentation files
+
+Database Tables: 4
+API Endpoints: 5
+React Components: 4
+UI Pages: 2
+Utility Modules: 3
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 QUICK ACCESS GUIDE
+
+Getting Started:
+  → QUICK_START.md         # 5-minute setup
+
+Learning Architecture:
+  → PROJECT_SUMMARY.md     # Complete overview
+  → backend/README.md      # Backend details
+  → frontend/README.md     # Frontend details
+
+API Development:
+  → API_REFERENCE.md       # All endpoints
+  → http://localhost:8000/docs # Swagger UI
+
+Production:
+  → README.md              # Deployment section
+  → docker-compose.yml     # Container setup
+
+═══════════════════════════════════════════════════════════════════
