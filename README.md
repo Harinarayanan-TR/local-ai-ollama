@@ -1,72 +1,107 @@
 # Local WiFi AI Server
 
-Local WiFi AI is a small Ollama-backed chat server for devices on the same network.
+Local WiFi AI is a lightweight, self-hosted chat server powered by Ollama, designed for seamless access across devices on the same network.
 
-Open:
+Users can connect through a browser, authenticate via a minimal interface, and interact with locally hosted AI models in a clean chat environment.
 
-```text
-http://<host-ip>:6767
-```
+---
 
-The app shows a minimalist login screen, assigns each browser/device a persistent device ID, and redirects successful users to `/chat/<device-id>`.
+## Overview
+
+The system provides a private, LAN-based AI experience without relying on cloud services. Each device is assigned a persistent identifier, enabling session continuity and personalized chat access.
+
+After authentication, users are redirected to a dedicated chat endpoint tied to their device.
+
+---
 
 ## Architecture
 
-- `gateway`: nginx, public LAN entrypoint on port `6767`.
-- `frontend`: React chat UI.
-- `backend`: FastAPI API for auth, sessions, chat, model status, model switching, and history.
-- `ollama`: local model runtime.
-- `sqlite`: local database at `backend/app/database/data/chat.db`.
+The system is composed of the following services:
 
-## Model Policy
+* **Gateway**
+  Nginx-based entry point exposed on the local network, handling routing and external access.
 
-Default model: `phi3`.
+* **Frontend**
+  A React-based user interface providing a responsive and minimal chat experience.
 
-Model IDs:
+* **Backend**
+  A FastAPI service managing authentication, session handling, chat processing, model orchestration, and conversation history.
 
-| ID | Model |
-| --- | --- |
-| M01 | phi3 |
+* **Ollama Runtime**
+  Responsible for running and managing local AI models.
+
+* **Database**
+  SQLite-based storage for session data and chat history.
+
+---
+
+## Model Management
+
+The system supports multiple AI models, with a default model preconfigured.
+
+### Default Model
+
+* `phi3`
+
+### Available Models
+
+| ID  | Model          |
+| --- | -------------- |
+| M01 | phi3           |
 | M02 | deepseek-coder |
-| M03 | mistral |
-| M04 | llama3 |
-| M05 | llava |
+| M03 | mistral        |
+| M04 | llama3         |
+| M05 | llava          |
 
-The backend enforces one active generation at a time. If a user requests a different model while the runtime is busy, the API returns:
+---
 
-```text
-UNABLE TO LOAD MODEL. PLEASE CONTINUE THE CONVERSATION WITH MODEL ID: X
-```
+## Runtime Behavior
 
-Before switching models, the previous model is unloaded through Ollama `keep_alive: 0`.
+* Only one model can actively generate responses at any given time.
+* If a request is made while another model is active, the system prevents switching and returns a structured response indicating the active model.
+* Model switching is handled safely by unloading the current model before initializing another, ensuring efficient resource usage.
 
-## Run
+---
 
-```bash
-chmod +x start.sh
-./start.sh
-```
+## Session & Identity
 
-Then open `http://<host-ip>:6767` from any device on the same WiFi network.
+* Each device is assigned a persistent device ID.
+* Sessions are tied to this ID, allowing users to resume conversations across visits.
+* Chat access is scoped per device via a dedicated endpoint.
 
-Default API key:
+---
 
-```text
-thoovara@hari
-```
+## Data Handling
 
-## Reset Runtime State
+* Chat history and session data are stored locally.
+* The system operates entirely within the local network, ensuring privacy and full data control.
 
-To clear local session/history data:
+---
 
-```bash
-rm -f backend/app/database/data/chat.db
-```
+## Authentication
 
-To ask Ollama to unload all managed models:
+A default API key is configured for access control. This can be modified for enhanced security in production environments.
 
-```bash
-for model in phi3 deepseek-coder mistral llama3 llava; do
-  curl -s http://localhost:11434/api/generate -d "{\"model\":\"$model\",\"stream\":false,\"keep_alive\":0}" >/dev/null
-done
-```
+---
+
+## Design Philosophy
+
+* **Local-first**: No dependency on external APIs or cloud services
+* **Lightweight**: Minimal resource overhead
+* **Private**: All data remains within the local network
+* **Extensible**: Modular architecture for future enhancements
+
+--- 
+
+## Future Scope
+
+* Multi-user role management
+* Advanced analytics dashboard
+* AI-assisted automation features
+* Enhanced model orchestration and scaling
+
+---
+
+Local WiFi AI is built as a foundation for private, scalable, and customizable AI systems within controlled network environments.
+
+**SHOULD HAVE OLLAMA PRE-INSTALLED WITH llama3, llava, mistral, deepseekcoder and phi3 PULLED**
